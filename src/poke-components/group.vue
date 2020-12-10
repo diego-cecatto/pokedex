@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div :class=" { loading: !name} " >
 		{{ name }}
 	</div>
 </template>
@@ -39,7 +39,3 @@
 		}
 	};
 </script>
-
-<style lang="scss">
-
-</style>

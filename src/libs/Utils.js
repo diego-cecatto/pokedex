@@ -25,7 +25,6 @@ Utils.requests = {
 		axios.all(_groupeds).then(
 			axios.spread(
 				(...responses) => {
-					console.log(responses)
 					for (var response in responses) {
 						response = responses[response].data;
 						params.callbacks.single(response)

@@ -44,4 +44,13 @@
 			text-decoration: none;
 		}
 	}
+
+	.loading {
+		background-color: #ccc;
+		width: 100px;
+		display: block;
+		height: 20px;
+		margin-bottom: 10px;
+		color: #ccc;
+	}
 </style>

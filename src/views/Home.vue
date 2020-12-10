@@ -13,10 +13,11 @@
 			</div>
 		</div>
 		<div v-if="generation.data">
-			<table>
+			<h2> Curiosidades </h2>
+			<table id="curiosidades">
 				<tbody>
 					<tr>
-						<td>Número de novos Pokémons: </td>
+						<td>Número de novos Pokémons</td>
 						<td>{{ generation.data.pokemon_species.length }} </td>
 					</tr>
 					<tr>
@@ -25,8 +26,15 @@
 							<poke-groups :groups="generation.data.version_groups"></poke-groups>
 						</td>
 					</tr>
+					<tr>
+						<td>Região principal</td>
+						<td>
+							{{ sanitize(generation.data.main_region.name) }}
+						</td>
+					</tr>
 				</tbody>
 			</table>
+			<h2> Pokémons </h2>
 			<div id="search">
 				<input type="text" v-model="search" placeholder="Digite aqui o nome do pokemon">
 				<span>
@@ -34,9 +42,9 @@
 						<path d="M27.414,24.586l-5.077-5.077C23.386,17.928,24,16.035,24,14c0-5.514-4.486-10-10-10S4,8.486,4,14 s4.486,10,10,10c2.035,0,3.928-0.614,5.509-1.663l5.077,5.077c0.78,0.781,2.048,0.781,2.828,0  C28.195,26.633,28.195,25.367,27.414,24.586z M7,14c0-3.86,3.14-7,7-7s7,3.14,7,7s-3.14,7-7,7S7,17.86,7,14z" id="XMLID_223_"/>
 					</svg>
 				</span>
-				<div>
-					<label> Habilitar modo sombra </label>
-					<input type="checkbox" v-model="shadow">
+				<div id="shadow-mode">
+					<label> Modo sombra </label>
+					<onoff-toggle v-model="shadow" theme="material" />
 				</div>
 			</div>
 			<ul id="alphabet">
@@ -51,10 +59,13 @@
 						<img :src="specie.data.pokemon.data.sprites.front_default" width="96" height="96"/>
 					</div>
 					<div v-else>
-						<svg width="96" heigth="96" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" version="1.1" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
+						<svg width="90" height="90" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="Layer_1" style="enable-background:new 0 0 100 100;" version="1.1" viewBox="0 0 100 100" xml:space="preserve">
 							<g>
-								<circle cx="62.75" cy="44.25" r="7.375"/><rect x="47.919" y="-4.103" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -20.7107 50)" width="4.163" height="108.207"/>
-								<path d="M28,17.5h44c5.79,0,10.5,4.71,10.5,10.5v27.278l-13.143,9.015l14.369,14.369C84.85,76.694,85.5,74.424,85.5,72V28    c0-7.444-6.056-13.5-13.5-13.5H28c-2.423,0-4.694,0.65-6.662,1.773l2.224,2.224C24.912,17.864,26.413,17.5,28,17.5z"/><path d="M60.926,70.075L40,50L17.5,68.047V28c0-1.587,0.364-3.088,0.998-4.438l-2.224-2.224C15.15,23.306,14.5,25.577,14.5,28v44    c0,7.444,6.056,13.5,13.5,13.5h44c2.424,0,4.694-0.65,6.662-1.773L63.349,68.413L60.926,70.075z"/>
+								<g>
+									<path d="M40.3,47.6c1.1-4.4,5-7.6,9.7-7.6c4.7,0,8.6,3.2,9.7,7.6C78.2,47.9,94.5,49,95,51.1c0-0.4,0-0.7,0-1.1 C95,25.1,74.9,5,50,5S5,25.1,5,50c0,0.4,0,0.7,0,1.1C5.5,49.1,21.8,47.9,40.3,47.6z"/>
+									<path d="M37.1,57.6C39.7,62.1,44.6,65,50,65c5.4,0,10.2-2.9,12.9-7.4c13.9,0.3,21.9,1,26,1.6C84.7,77.1,68.7,90,50,90 c-18.7,0-34.7-12.9-38.9-30.7C15.2,58.6,23.2,57.9,37.1,57.6 M40.3,52.6c-17.2,0.3-32.5,1.3-35,3.1C8.2,77.8,27.1,95,50,95 c22.9,0,41.8-17.1,44.6-39.3c-2.5-1.8-17.7-2.8-35-3.1c-1.1,4.3-5,7.4-9.7,7.4C45.4,60,41.5,56.8,40.3,52.6L40.3,52.6z"/>
+								</g>
+								<circle cx="50" cy="50" r="7"/>
 							</g>
 						</svg>
 					</div>
@@ -67,9 +78,11 @@
 	import axios from 'axios';
 	import Vue from 'vue';
 	import PokeGroups from './../poke-components/groups.vue';
+	import OnoffToggle from 'vue-onoff-toggle'
 	export default {
 		components: {
-			PokeGroups : PokeGroups
+			PokeGroups : PokeGroups,
+			OnoffToggle: OnoffToggle
 		},
 		data() {
 			return {
@@ -103,6 +116,7 @@
 			openGeneration: function() {
 				this.loaded = true;
 				this.expand(this.generation, 'data', (response) => {
+					console.log(response)
 					response.pokemon_species.sort((a, b) => {
 						a.name = this.sanitize(a.name);
 						b.name = this.sanitize(b.name);
@@ -175,6 +189,11 @@
 </script>
 
 <style lang="scss">
+	.v-toggle_thumb {
+		position: absolute;
+		transition: all 0.3s;
+		border: 1px solid #ccc;
+	}
 	select {
 		border-radius: 10px;
 		background: #fff;
@@ -262,6 +281,38 @@
 
 			svg {
 				width: 20px
+			}
+		}
+
+		#shadow-mode {
+			line-height: 40px;
+			display: flex;
+			padding-left: 20px;
+
+			.v-toggle {
+				width: 34px;
+				height: 14px;
+				margin-top: 10px;
+				border-radius: 7px;
+				background-color: rgb(159, 159, 159);
+				margin-left: 8px;
+			}
+		}
+	}
+
+	table#curiosidades {
+		tr {
+			td {
+				text-align: left;
+				padding-left: 8px;
+				&:first-child {
+					background: #ccc;
+					padding-right: 8px;
+				}
+				ul {
+					list-style: none;
+					padding-left: 0;
+				}
 			}
 		}
 	}
